@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+
+    <!-- Insert ADMIN role -->
+    <changeSet id="002-insert-admin-role" author="chatgpt">
+        <insert tableName="roles">
+            <column name="name" value="ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert INSTRUCTOR role -->
+    <changeSet id="003-insert-instructor-role" author="chatgpt">
+        <insert tableName="roles">
+            <column name="name" value="INSTRUCTOR"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert LEARNER role -->
+    <changeSet id="004-insert-learner-role" author="chatgpt">
+        <insert tableName="roles">
+            <column name="name" value="LEARNER"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
