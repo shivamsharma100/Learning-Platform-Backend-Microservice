@@ -24,7 +24,7 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @Operation(summary = "Add new Lessons for a course")
     @PostMapping("/courses/{courseId}/lessons")
-    public ResponseEntity<Boolean> addCourse(@RequestBody LessonRequest  lessonRequests,
+    public ResponseEntity<Boolean> addCourse(@RequestBody LessonRequest lessonRequests,
                                              @PathVariable String courseId) {
         Boolean response = lessonService.addLessons(lessonRequests, courseId);
         return ResponseEntity.ok(response);

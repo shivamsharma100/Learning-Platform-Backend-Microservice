@@ -41,14 +41,14 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html"
                         ).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/courses").hasAnyRole(ADMIN,INSTRUCTOR)
-                        .requestMatchers(HttpMethod.GET, "/api/courses/course/*").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/courses").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/courses").hasAnyRole(ADMIN, INSTRUCTOR)
+                        .requestMatchers(HttpMethod.GET, "/api/courses/course/*").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/courses").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/courses/*").hasAnyRole(ADMIN, INSTRUCTOR)
                         .requestMatchers(HttpMethod.GET, "/courses/*/enrollments").hasAnyRole(LEARNER, ADMIN)
                         .requestMatchers(HttpMethod.POST, "/courses/*/enrollments").hasRole(ADMIN)
                         .requestMatchers("/api/lesson/add").hasRole(INSTRUCTOR)
-                        .requestMatchers("/api/lesson/getByCourse").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
+                        .requestMatchers("/api/lesson/getByCourse").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

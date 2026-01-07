@@ -14,6 +14,7 @@ public enum StatusEnum {
     StatusEnum(String messageType) {
         this.messageType = messageType;
     }
+
     @JsonValue
     public String getMessageType() {
         return this.messageType;

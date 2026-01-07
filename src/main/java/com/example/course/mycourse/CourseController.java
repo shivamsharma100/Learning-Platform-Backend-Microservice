@@ -22,7 +22,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Create new Courses")
     @PostMapping()
-    public ResponseEntity<List<Course>> addCourse(@RequestBody List<Course>  courses) {
+    public ResponseEntity<List<Course>> addCourse(@RequestBody List<Course> courses) {
         List<Course> savedCourse = courseService.addCourses(courses);
         return ResponseEntity.ok(savedCourse);
     }
@@ -30,7 +30,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
     @Operation(summary = "Get Course by ID")
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<Course> getCourse(@PathVariable String  courseId) {
+    public ResponseEntity<Course> getCourse(@PathVariable String courseId) {
         Course course = courseService.getCourse(courseId);
         return ResponseEntity.ok(course);
     }

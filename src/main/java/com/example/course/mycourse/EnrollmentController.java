@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/enrollment")
 @RequiredArgsConstructor
-@Tag(name = "Lesson Controller", description = "Operations related to Enrollments")
+@Tag(name = "Enrollment Controller", description = "Operations related to Enrollments")
 public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
@@ -34,9 +34,9 @@ public class EnrollmentController {
     @Operation(summary = "Get Enrollments based on learnerId and courseId for a course")
     @GetMapping("/courses/{courseId}/enrollments")
     public ResponseEntity<Enrollment> getEnrollments(@RequestParam String learnerID,
-                                                           @PathVariable String courseId) {
+                                                     @PathVariable String courseId) {
 
-         Enrollment enrollments = enrollmentService.getEnrollmentById(courseId, learnerID);
+        Enrollment enrollments = enrollmentService.getEnrollmentById(courseId, learnerID);
         return ResponseEntity.ok(enrollments);
     }
 }
