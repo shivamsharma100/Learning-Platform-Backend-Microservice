@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -44,8 +45,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/courses/getById").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
                         .requestMatchers("/api/courses/getAll").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
                         .requestMatchers("/api/courses/updateOne").hasAnyRole(ADMIN, INSTRUCTOR)
-                        .requestMatchers("/api/instructor/**").hasRole("INSTRUCTOR")
-                        .requestMatchers("/api/learner/**").hasRole("LEARNER")
+                        .requestMatchers(HttpMethod.GET, "/courses/*/enrollments").hasAnyRole(LEARNER, ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/courses/*/enrollments").hasRole(ADMIN)
                         .requestMatchers("/api/lesson/add").hasRole(INSTRUCTOR)
                         .requestMatchers("/api/lesson/getByCourse").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
                         .anyRequest().authenticated()
