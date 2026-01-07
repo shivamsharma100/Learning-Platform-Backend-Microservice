@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.course.AppConstants.*;
+
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
@@ -38,9 +40,14 @@ public class SecurityConfig {
                                 "/swagger-ui/index.html"
                         ).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/api/courses").hasRole("ADMIN")
+                        .requestMatchers("/api/courses/add").hasAnyRole(ADMIN,INSTRUCTOR)
+                        .requestMatchers("/api/courses/getById").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
+                        .requestMatchers("/api/courses/getAll").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
+                        .requestMatchers("/api/courses/updateOne").hasAnyRole(ADMIN, INSTRUCTOR)
                         .requestMatchers("/api/instructor/**").hasRole("INSTRUCTOR")
                         .requestMatchers("/api/learner/**").hasRole("LEARNER")
+                        .requestMatchers("/api/lesson/add").hasRole(INSTRUCTOR)
+                        .requestMatchers("/api/lesson/getByCourse").hasAnyRole(INSTRUCTOR,LEARNER, ADMIN)
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
