@@ -1,4 +1,4 @@
-name: CI Build
+name: CI Build with SonarCloud
 
 on:
   push:
@@ -21,5 +21,11 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Build and run tests
-        run: mvn clean verify
+      - name: Build, Test & SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+            -Dsonar.host.url=https://sonarcloud.io
