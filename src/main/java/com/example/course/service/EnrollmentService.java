@@ -3,6 +3,7 @@ package com.example.course.service;
 import com.example.course.entities.Course;
 import com.example.course.entities.Enrollment;
 import com.example.course.entities.Lesson;
+import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
 import com.example.course.repositories.EnrollmentRepositories;
 import com.example.course.request.EnrollmentRequest;
@@ -22,7 +23,7 @@ public class EnrollmentService {
 
     public List<Enrollment> addEnrollments(String courseId, EnrollmentRequest enrollmentRequest){
         Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
-            throw new RuntimeException("Invalid course id provided");
+            throw new ResourceNotFoundException("Invalid course id provided "+ courseId);
         });
         List<Enrollment> enrollments = enrollmentRequest.getEnrollments().stream().map(enrollment -> Enrollment.builder().learnerId(Long.valueOf(enrollment.getLearnerId()))
                 .status(enrollment.getStatus().name())
@@ -36,7 +37,7 @@ public class EnrollmentService {
 
     public Enrollment getEnrollmentById(String courseId, String learnerId){
         Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
-            throw new RuntimeException("Invalid course id provided");
+            throw new ResourceNotFoundException("Invalid course id provided "+ courseId);
         });
 
         return enrollmentRepositories.findByCouseAndLearnerId(course, learnerId);

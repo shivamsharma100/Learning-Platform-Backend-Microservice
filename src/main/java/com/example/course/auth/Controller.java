@@ -1,6 +1,5 @@
 package com.example.course.auth;
 
-
 import com.example.course.entities.User;
 import com.example.course.entities.Role;
 import com.example.course.repositories.RoleRepository;

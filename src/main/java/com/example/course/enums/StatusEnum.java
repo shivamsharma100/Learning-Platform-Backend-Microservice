@@ -1,5 +1,6 @@
 package com.example.course.enums;
 
+import com.example.course.exception.IncorrectStatusForEnrollment;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -25,7 +26,7 @@ public enum StatusEnum {
         return Arrays.stream(values())
                 .filter(notificationType -> notificationType.getMessageType().equalsIgnoreCase(name))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Unrecognized status value : " + name));
+                .orElseThrow(() -> new IncorrectStatusForEnrollment("Unrecognized status value : " + name));
     }
 
 

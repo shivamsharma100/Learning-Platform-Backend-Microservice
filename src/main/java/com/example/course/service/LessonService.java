@@ -2,6 +2,7 @@ package com.example.course.service;
 
 import com.example.course.entities.Course;
 import com.example.course.entities.Lesson;
+import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
 import com.example.course.repositories.LessonRepository;
 import com.example.course.request.LessonRequest;
@@ -20,7 +21,7 @@ public class LessonService {
 
     public Boolean addLessons(LessonRequest lessonRequest, String courseId){
         Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
-            throw new RuntimeException("");
+            throw new ResourceNotFoundException("Invalid course id provided"+ courseId);
         });
         List<Lesson> lessons = lessonRequest.getLessons().stream().map(lesson -> Lesson.builder().title(lesson.getTitle())
                 .orderNo(Integer.parseInt(lesson.getOrderNo()))
@@ -36,11 +37,11 @@ public class LessonService {
 
     public List<Lesson> getLessons(String courseId){
         Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
-            throw new RuntimeException("Invalid course id provided");
+            throw new ResourceNotFoundException("Invalid course id provided"+ courseId);
         });
 
         return lessonRepository.findByCourse(course).orElseThrow(()->{
-            throw new RuntimeException("Lessons not available for this courseId"+course.getId());
+            throw new ResourceNotFoundException("Lesson not available for this course id"+ courseId);
         });
     }
 
