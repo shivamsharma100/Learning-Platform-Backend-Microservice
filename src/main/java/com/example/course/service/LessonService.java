@@ -18,8 +18,8 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
 
-    public Boolean addLessons(LessonRequest lessonRequest){
-        Course course  = courseRepository.findById(Long.parseLong(lessonRequest.getCourseId())).orElseThrow(()->{
+    public Boolean addLessons(LessonRequest lessonRequest, String courseId){
+        Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
             throw new RuntimeException("");
         });
         List<Lesson> lessons = lessonRequest.getLessons().stream().map(lesson -> Lesson.builder().title(lesson.getTitle())

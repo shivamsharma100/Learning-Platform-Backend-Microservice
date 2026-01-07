@@ -8,6 +8,8 @@
 
     <!-- Roles master data -->
     <include file="db/changelog/db.changelog-roles.xml"/>
+    <include file="db/changelog/db.changelog-create-course-table.xml"/>
+    <include file="db/changelog/db.changelog-create-lesson-table.xml"/>
     <include file="db/changelog/db.changelog-create-enrollment-table.xml"/>
 
 </databaseChangeLog>

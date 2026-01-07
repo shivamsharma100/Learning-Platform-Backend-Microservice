@@ -21,7 +21,7 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Create new Courses")
-    @PostMapping("/add")
+    @PostMapping()
     public ResponseEntity<List<Course>> addCourse(@RequestBody List<Course>  courses) {
         List<Course> savedCourse = courseService.addCourses(courses);
         return ResponseEntity.ok(savedCourse);
@@ -29,15 +29,15 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
     @Operation(summary = "Get Course by ID")
-    @GetMapping("/getById")
-    public ResponseEntity<Course> getCourse(@RequestParam String  courseId) {
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<Course> getCourse(@PathVariable String  courseId) {
         Course course = courseService.getCourse(courseId);
         return ResponseEntity.ok(course);
     }
 
     @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
     @Operation(summary = "Get all courses")
-    @GetMapping("/getAll")
+    @GetMapping()
     public ResponseEntity<List<Course>> getCourses() {
         List<Course> course = courseService.getCourses();
         return ResponseEntity.ok(course);
@@ -45,8 +45,8 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
     @Operation(summary = "Update course by Id")
-    @PutMapping("/updateOne")
-    public ResponseEntity<String> putCourse(@RequestParam String courseId, @RequestParam String description) {
+    @PutMapping("/{courseId}")
+    public ResponseEntity<String> putCourse(@PathVariable String courseId, @RequestParam String description) {
         return ResponseEntity.ok(courseService.updateCourse(courseId, description));
     }
 

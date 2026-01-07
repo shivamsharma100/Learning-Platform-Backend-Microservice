@@ -23,16 +23,17 @@ public class LessonController {
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @Operation(summary = "Add new Lessons for a course")
-    @PostMapping("/add")
-    public ResponseEntity<Boolean> addCourse(@RequestBody LessonRequest  lessonRequests) {
-        Boolean response = lessonService.addLessons(lessonRequests);
+    @PostMapping("/courses/{courseId}/lessons")
+    public ResponseEntity<Boolean> addCourse(@RequestBody LessonRequest  lessonRequests,
+                                             @PathVariable String courseId) {
+        Boolean response = lessonService.addLessons(lessonRequests, courseId);
         return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Add new Lessons for a course")
-    @GetMapping("/getByCourse")
-    public ResponseEntity<List<Lesson>> addCourse(@RequestParam String courseId) {
+    @GetMapping("/courses/{courseId}/lessons")
+    public ResponseEntity<List<Lesson>> addCourse(@PathVariable String courseId) {
         return ResponseEntity.ok(lessonService.getLessons(courseId));
     }
 }

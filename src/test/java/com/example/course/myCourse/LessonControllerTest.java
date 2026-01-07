@@ -40,16 +40,15 @@ class LessonControllerTest {
     @Test
     void testAddLessons_success() {
         LessonRequest request = new LessonRequest();
-        request.setCourseId("c1");
 
-        when(lessonService.addLessons(request)).thenReturn(true);
+        when(lessonService.addLessons(request, "c1")).thenReturn(true);
 
-        ResponseEntity<Boolean> response = lessonController.addCourse(request);
+        ResponseEntity<Boolean> response = lessonController.addCourse(request, "c1");
 
         assertNotNull(response);
         assertTrue(response.getBody());
 
-        verify(lessonService, times(1)).addLessons(request);
+        verify(lessonService, times(1)).addLessons(request, "c1");
     }
 
     @Test

@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LessonRequest{
-    public String courseId;
 
     public List<Lesson> lessons;
 
