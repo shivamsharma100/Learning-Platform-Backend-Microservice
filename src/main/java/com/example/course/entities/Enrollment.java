@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -19,7 +18,7 @@ public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     // FK to Course (owned by this service)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,7 +27,7 @@ public class Enrollment {
 
     // External reference (NO relationship)
     @Column(name = "learner_id", nullable = false)
-    private Long learnerId;
+    private Integer learnerId;
 
     @Column(nullable = false)
     private String status;

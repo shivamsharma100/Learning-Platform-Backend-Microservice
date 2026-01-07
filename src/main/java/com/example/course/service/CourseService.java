@@ -6,6 +6,7 @@ import com.example.course.repositories.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class CourseService {
     }
 
     public Course getCourse(String courseId){
-        Optional<Course> course = Optional.ofNullable(courseRepository.findById(Long.parseLong(courseId)).orElseThrow(() -> new ResourceNotFoundException("Course not present with id" + courseId)));
+        Optional<Course> course = Optional.ofNullable(courseRepository.findById(Integer.parseInt(courseId)).orElseThrow(() -> new ResourceNotFoundException("Course not present with id" + courseId)));
        return course.orElse(null);
     }
 
@@ -33,7 +34,7 @@ public class CourseService {
     }
 
     public String updateCourse(String courseId, String description){
-        courseRepository.findById(Long.parseLong(courseId)).ifPresentOrElse(
+        courseRepository.findById(Integer.parseInt(courseId)).ifPresentOrElse(
                 course -> {
                     course.setDescription(description);
                     courseRepository.save(course);

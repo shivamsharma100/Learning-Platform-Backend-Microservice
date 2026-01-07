@@ -9,7 +9,7 @@
     <!-- Changeset for courses table -->
     <changeSet id="1-create-courses-table" author="yourname">
         <createTable tableName="courses">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">

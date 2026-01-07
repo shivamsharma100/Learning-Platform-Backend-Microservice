@@ -9,6 +9,7 @@ import com.example.course.request.LessonRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class LessonService {
     private final CourseRepository courseRepository;
 
     public Boolean addLessons(LessonRequest lessonRequest, String courseId){
-        Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
+        Course course  = courseRepository.findById(Integer.parseInt(courseId)).orElseThrow(()->{
             throw new ResourceNotFoundException("Invalid course id provided"+ courseId);
         });
         List<Lesson> lessons = lessonRequest.getLessons().stream().map(lesson -> Lesson.builder().title(lesson.getTitle())
@@ -36,7 +37,7 @@ public class LessonService {
     }
 
     public List<Lesson> getLessons(String courseId){
-        Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
+        Course course  = courseRepository.findById(Integer.parseInt(courseId)).orElseThrow(()->{
             throw new ResourceNotFoundException("Invalid course id provided"+ courseId);
         });
 

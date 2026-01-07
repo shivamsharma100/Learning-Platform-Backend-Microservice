@@ -9,10 +9,10 @@
     <!-- Changeset for lessons table -->
     <changeSet id="2-create-lessons-table" author="yourname">
         <createTable tableName="lessons">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="course_id" type="BIGINT">
+            <column name="course_id" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="title" type="VARCHAR(255)">

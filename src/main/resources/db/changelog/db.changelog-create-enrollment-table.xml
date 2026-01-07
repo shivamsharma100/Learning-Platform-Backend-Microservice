@@ -10,15 +10,15 @@
 
         <!-- Create Enrollment Table -->
         <createTable tableName="enrollments">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="course_id" type="BIGINT">
+            <column name="course_id" type="INT">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="learner_id" type="BIGINT">
+            <column name="learner_id" type="INT">
                 <constraints nullable="false"/>
             </column>
 

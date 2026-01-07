@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,10 +32,10 @@ class LessonControllerTest {
         lessonController = new LessonController(lessonService);
 
         lesson1 = new Lesson();
-        lesson1.setId(1L);
+        lesson1.setId(1);
 
         lesson2 = new Lesson();
-        lesson2.setId(2L);
+        lesson2.setId(2);
     }
 
     @Test

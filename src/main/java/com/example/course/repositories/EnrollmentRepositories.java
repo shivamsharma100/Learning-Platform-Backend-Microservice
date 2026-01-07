@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 
 @Repository
-public interface EnrollmentRepositories extends JpaRepository<Enrollment, BigInteger> {
+public interface EnrollmentRepositories extends JpaRepository<Enrollment, Integer> {
 
     @Query("SELECT e.id, e.course, e.learnerId, e.status, e.enrolledAt FROM Enrollment e " +
             "WHERE e.course = :course AND " +

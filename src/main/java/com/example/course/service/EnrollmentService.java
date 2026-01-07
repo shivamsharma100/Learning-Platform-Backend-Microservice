@@ -10,6 +10,7 @@ import com.example.course.request.EnrollmentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +23,10 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
 
     public List<Enrollment> addEnrollments(String courseId, EnrollmentRequest enrollmentRequest){
-        Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
+        Course course  = courseRepository.findById(Integer.parseInt(courseId)).orElseThrow(()->{
             throw new ResourceNotFoundException("Invalid course id provided "+ courseId);
         });
-        List<Enrollment> enrollments = enrollmentRequest.getEnrollments().stream().map(enrollment -> Enrollment.builder().learnerId(Long.valueOf(enrollment.getLearnerId()))
+        List<Enrollment> enrollments = enrollmentRequest.getEnrollments().stream().map(enrollment -> Enrollment.builder().learnerId(Integer.parseInt(enrollment.getLearnerId()))
                 .status(enrollment.getStatus().name())
                 .enrolledAt(OffsetDateTime.now())
                 .course(course)
@@ -36,7 +37,7 @@ public class EnrollmentService {
     }
 
     public Enrollment getEnrollmentById(String courseId, String learnerId){
-        Course course  = courseRepository.findById(Long.parseLong(courseId)).orElseThrow(()->{
+        Course course  = courseRepository.findById(Integer.parseInt(courseId)).orElseThrow(()->{
             throw new ResourceNotFoundException("Invalid course id provided "+ courseId);
         });
 

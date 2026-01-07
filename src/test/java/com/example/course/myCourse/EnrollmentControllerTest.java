@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,12 +32,12 @@ class EnrollmentControllerTest {
         enrollmentController = new EnrollmentController(enrollmentService);
 
         enrollment1 = new Enrollment();
-        enrollment1.setId(1L);
-        enrollment1.setLearnerId(1L);
+        enrollment1.setId(1);
+        enrollment1.setLearnerId(1);
 
         enrollment2 = new Enrollment();
-        enrollment2.setId(2L);
-        enrollment2.setLearnerId(2L);
+        enrollment2.setId(2);
+        enrollment2.setLearnerId(2);
     }
 
     @Test
@@ -56,8 +57,8 @@ class EnrollmentControllerTest {
         ResponseEntity<Enrollment> response = enrollmentController.getEnrollments("l1", "c1");
 
         assertNotNull(response);
-        assertEquals(1L, response.getBody().getId());
-        assertEquals(1l, response.getBody().getLearnerId());
+        assertEquals(1, response.getBody().getId());
+        assertEquals(1, response.getBody().getLearnerId());
 
         verify(enrollmentService, times(1)).getEnrollmentById("c1", "l1");
     }

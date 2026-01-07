@@ -31,7 +31,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF is disabled because this is a stateless REST API using JWT for authentication
         http
-                .csrf(csrf -> csrf.disable())
+                // CSRF is enabled by default but ignored for stateless REST API endpoints
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**") // ignore CSRF only for /api endpoints
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
