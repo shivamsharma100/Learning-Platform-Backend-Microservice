@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class LessonControllerUnitTest {
+class LessonControllerTest {
 
     @Mock
     private LessonService lessonService;
