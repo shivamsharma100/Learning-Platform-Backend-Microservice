@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -21,9 +22,34 @@ public class CourseController {
 
     @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
     @Operation(summary = "Create new Courses")
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<List<Course>> addCourse(@RequestBody List<Course>  courses) {
         List<Course> savedCourse = courseService.addCourses(courses);
         return ResponseEntity.ok(savedCourse);
     }
+
+    @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
+    @Operation(summary = "Get Course by ID")
+    @GetMapping("/getById")
+    public ResponseEntity<Course> getCourse(@RequestParam String  courseId) {
+        Course course = courseService.getCourse(courseId);
+        return ResponseEntity.ok(course);
+    }
+
+    @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
+    @Operation(summary = "Get all courses")
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Course>> getCourses() {
+        List<Course> course = courseService.getCourses();
+        return ResponseEntity.ok(course);
+    }
+
+    @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
+    @Operation(summary = "Update course by Id")
+    @PutMapping("/updateOne")
+    public ResponseEntity<String> putCourse(@RequestParam String courseId, @RequestParam String description) {
+        return ResponseEntity.ok(courseService.updateCourse(courseId, description));
+    }
+
+
 }
