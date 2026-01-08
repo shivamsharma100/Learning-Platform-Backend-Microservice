@@ -1,14 +1,12 @@
 package com.example.course.service;
 
 import com.example.course.entities.User;
-import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.exception.UserNotFoundException;
 import com.example.course.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

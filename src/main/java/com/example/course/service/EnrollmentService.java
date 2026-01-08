@@ -2,7 +2,6 @@ package com.example.course.service;
 
 import com.example.course.entities.Course;
 import com.example.course.entities.Enrollment;
-import com.example.course.entities.Lesson;
 import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
 import com.example.course.repositories.EnrollmentRepositories;
@@ -10,7 +9,6 @@ import com.example.course.request.EnrollmentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
