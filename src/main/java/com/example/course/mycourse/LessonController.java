@@ -31,7 +31,7 @@ public class LessonController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
-    @Operation(summary = "Add new Lessons for a course")
+    @Operation(summary = "Get All Lessons for a course")
     @GetMapping("/courses/{courseId}/lessons")
     public ResponseEntity<List<Lesson>> addCourse(@PathVariable String courseId) {
         return ResponseEntity.ok(lessonService.getLessons(courseId));

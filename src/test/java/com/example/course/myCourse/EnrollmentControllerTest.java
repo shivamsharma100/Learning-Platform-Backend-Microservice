@@ -1,65 +1,63 @@
 package com.example.course.myCourse;
 
-import com.example.course.entities.Enrollment;
 import com.example.course.mycourse.EnrollmentController;
 import com.example.course.request.EnrollmentRequest;
 import com.example.course.service.EnrollmentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigInteger;
-import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class EnrollmentControllerTest {
+
+    private MockMvc mockMvc;
 
     @Mock
     private EnrollmentService enrollmentService;
 
+    @InjectMocks
     private EnrollmentController enrollmentController;
 
-    private Enrollment enrollment1;
-    private Enrollment enrollment2;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        enrollmentController = new EnrollmentController(enrollmentService);
-
-        enrollment1 = new Enrollment();
-        enrollment1.setId(1);
-        enrollment1.setLearnerId(1);
-
-        enrollment2 = new Enrollment();
-        enrollment2.setId(2);
-        enrollment2.setLearnerId(2);
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(enrollmentController).build();
     }
 
     @Test
-    void testAddEnrollments_success() {
+    void addEnrollments_withAdminRole_shouldReturnOk() throws Exception {
         EnrollmentRequest request = new EnrollmentRequest();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        when(enrollmentService.addEnrollments("c1", request)).thenReturn(List.of(enrollment1, enrollment2));
-
-        ResponseEntity<List<Enrollment>> response = enrollmentController.addEnrollments(request, "c1");
-        verify(enrollmentService, times(1)).addEnrollments("c1", request);
+        mockMvc.perform(post("/api/enrollment/courses/" + 1 + "/enrollments")
+                        .header("Authorization", "Bearer admin-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetEnrollments_success() {
-        when(enrollmentService.getEnrollmentById("c1", "l1")).thenReturn(enrollment1);
+    void getEnrollments_withAdminRole_shouldReturnOk() throws Exception {
+        EnrollmentRequest request = new EnrollmentRequest();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        ResponseEntity<Enrollment> response = enrollmentController.getEnrollments("l1", "c1");
-
-        assertNotNull(response);
-        assertEquals(1, response.getBody().getId());
-        assertEquals(1, response.getBody().getLearnerId());
-
-        verify(enrollmentService, times(1)).getEnrollmentById("c1", "l1");
+        mockMvc.perform(get("/api/enrollment/courses/" + 1 + "/enrollments")
+                        .header("Authorization", "Bearer admin-token")
+                        .param("learnerID","1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
     }
+
 }

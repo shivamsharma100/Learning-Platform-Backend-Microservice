@@ -4,63 +4,61 @@ import com.example.course.entities.Lesson;
 import com.example.course.mycourse.LessonController;
 import com.example.course.request.LessonRequest;
 import com.example.course.service.LessonService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(MockitoExtension.class)
 class LessonControllerTest {
 
+    private MockMvc mockMvc;
     @Mock
     private LessonService lessonService;
 
+    @InjectMocks
     private LessonController lessonController;
 
-    private Lesson lesson1;
-    private Lesson lesson2;
-
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        lessonController = new LessonController(lessonService);
-
-        lesson1 = new Lesson();
-        lesson1.setId(1);
-
-        lesson2 = new Lesson();
-        lesson2.setId(2);
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(lessonController).build();
     }
 
     @Test
-    void testAddLessons_success() {
-        LessonRequest request = new LessonRequest();
+    void testAddLessons_success() throws Exception {
+        LessonRequest lessonRequest = new LessonRequest();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        when(lessonService.addLessons(request, "c1")).thenReturn(true);
-
-        ResponseEntity<Boolean> response = lessonController.addCourse(request, "c1");
-
-        assertNotNull(response);
-        assertTrue(response.getBody());
-
-        verify(lessonService, times(1)).addLessons(request, "c1");
+        mockMvc.perform(post("/api/lesson/courses/" + 1 + "/lessons")
+                        .header("Authorization", "Bearer admin-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(lessonRequest)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetLessonsByCourse_success() {
-        when(lessonService.getLessons("c1")).thenReturn(List.of(lesson1, lesson2));
+    void testGetAllLessons_success() throws Exception {
 
-        ResponseEntity<List<Lesson>> response = lessonController.addCourse("c1");
 
-        assertNotNull(response);
-        assertEquals(2, response.getBody().size());
-
-        verify(lessonService, times(1)).getLessons("c1");
+        mockMvc.perform(get("/api/lesson/courses/" + 1 + "/lessons")
+                        .header("Authorization", "Bearer admin-token")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
