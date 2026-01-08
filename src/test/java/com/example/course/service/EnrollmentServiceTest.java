@@ -52,18 +52,11 @@ class EnrollmentServiceTest {
         when(courseRepository.findById(1)).thenReturn(Optional.of(sampleCourse));
 
         EnrollmentRequest.Enrollment info = new EnrollmentRequest.Enrollment();
-                info.setLearnerId("10");
+        info.setLearnerId("10");
         info.setStatus(StatusEnum.AVAILABLE);
 
         EnrollmentRequest request = new EnrollmentRequest();
         request.setEnrollments(List.of(info));
-
-        Enrollment enrollment = Enrollment.builder()
-                .learnerId(10)
-                .status("AVAILABLE")
-                .course(sampleCourse)
-                .enrolledAt(OffsetDateTime.now())
-                .build();
 
         when(enrollmentRepositories.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
 

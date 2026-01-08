@@ -168,10 +168,11 @@ class SecurityIntegrationTest {
     void authEndpoint_shouldBePublic() throws Exception {
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "    \"username\": \"shivam.sharma\",\n" +
-                                "    \"password\": \"password\"\n" +
-                                "}"))
+                        .content("""
+                                {
+                                    "username": "shivam.sharma",
+                                    "password": "password"
+                                }"""))
                 .andExpect(status().isOk());
     }
 }
