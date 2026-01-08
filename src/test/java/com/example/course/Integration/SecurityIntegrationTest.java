@@ -1,13 +1,18 @@
 package com.example.course.Integration;
 
 import com.example.course.entities.Course;
+import com.example.course.entities.User;
 import com.example.course.repositories.CourseRepository;
+import com.example.course.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestJwtConfig.class)
+@ActiveProfiles("test")
 @Transactional
 class SecurityIntegrationTest {
 
@@ -28,7 +34,21 @@ class SecurityIntegrationTest {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /* ===================== COURSES ===================== */
+
+    @BeforeEach
+    void setup() {
+        userRepository.save(User.builder()
+                .username("shivam.sharma")
+                .password(passwordEncoder.encode("password"))
+                .build());
+    }
 
     @Test
     void postCourses_withAdminRole_shouldReturnOk() throws Exception {
