@@ -1,6 +1,7 @@
 package com.example.course.util;
 
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -10,8 +11,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    private final String jwtSecret = "MySecretKey12345";
-    private final long jwtExpirationMs = 86400000; // 1 day
+    private final String jwtSecret;
+    private final long jwtExpirationMs = 86400000;
+
+    JwtUtil(@Value("${secret.jwt}") String jwtSecret){this.jwtSecret=jwtSecret;}// 1 day
 
     public String generateToken(String username, Set<String> roles) {
         return Jwts.builder()
