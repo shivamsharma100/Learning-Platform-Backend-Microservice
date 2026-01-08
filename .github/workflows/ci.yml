@@ -28,4 +28,11 @@ jobs:
           mvn clean verify sonar:sonar \
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.projectName="Learning-Platform-Backend-Microservice" \
+            -Dsonar.projectVersion=1.0 \
+            -Dsonar.sources=src/main/java \
+            -Dsonar.tests=src/test/java \
+            -Dsonar.java.binaries=target/classes \
+            -Dsonar.junit.reportPaths=target/surefire-reports \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report/jacoco.xml 
