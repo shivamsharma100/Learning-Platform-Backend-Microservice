@@ -2,7 +2,6 @@ package com.example.course.mycourse;
 
 import com.example.course.entities.Enrollment;
 import com.example.course.request.EnrollmentRequest;
-import com.example.course.request.LessonRequest;
 import com.example.course.service.EnrollmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

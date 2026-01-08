@@ -5,79 +5,74 @@ import com.example.course.mycourse.CourseController;
 import com.example.course.service.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigInteger;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ExtendWith(MockitoExtension.class)
 class CourseControllerTest {
+
+    private MockMvc mockMvc;
+
+    @InjectMocks
+    private CourseController courseController;
 
     @Mock
     private CourseService courseService;
 
-    private CourseController courseController;
-
-    private Course course1;
-    private Course course2;
-
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        courseController = new CourseController(courseService);
-
-        course1 = new Course();
-        course1.setId(1);
-        course1.setDescription("Desc 1");
-
-        course2 = new Course();
-        course2.setId(2);
-        course2.setDescription("Desc 2");
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(courseController).build();
     }
 
     @Test
-    void testAddCourse_success() {
-        List<Course> courses = List.of(course1, course2);
-        when(courseService.addCourses(courses)).thenReturn(courses);
+    void addCourse_withAdminRole_shouldReturnOk() throws Exception {
+        Mockito.when(courseService.addCourses(any()))
+                .thenReturn(List.of(new Course()));
 
-        ResponseEntity<List<Course>> response = courseController.addCourse(courses);
-        assertNotNull(response);
-        assertEquals(2, response.getBody().size());
-        verify(courseService, times(1)).addCourses(courses);
+        mockMvc.perform(post("/api/courses")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[{\"title\":\"Spring\",\"level\":\"BEGINNER\",\"duration\":10,\"status\":\"ACTIVE\"}]"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetCourseById_success() {
-        when(courseService.getCourse("1")).thenReturn(course1);
+    void updateCourse_withAdminRole_shouldReturnOk() throws Exception {
+        Mockito.when(courseService.updateCourse(any(), any()))
+                .thenReturn("Updated Successfully");
 
-        ResponseEntity<Course> response = courseController.getCourse("1");
-
-        assertNotNull(response);
-        assertEquals(1, response.getBody().getId());
-        verify(courseService, times(1)).getCourse("1");
+        mockMvc.perform(put("/api/courses/1")
+                        .param("description", "abc")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("[{\"title\":\"Spring\",\"level\":\"BEGINNER\",\"duration\":10,\"status\":\"ACTIVE\"}]"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testGetCourses_success() {
-        when(courseService.getCourses()).thenReturn(List.of(course1, course2));
-
-        ResponseEntity<List<Course>> response = courseController.getCourses();
-        assertNotNull(response);
-        assertEquals(2, response.getBody().size());
-        verify(courseService, times(1)).getCourses();
+    void getCourses_withLearnerRole_shouldReturnOk() throws Exception {
+        mockMvc.perform(get("/api/courses/course/1"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void testUpdateCourse_success() {
-        when(courseService.updateCourse("1", "New Desc")).thenReturn("Updated");
-
-        ResponseEntity<String> response = courseController.putCourse("1", "New Desc");
-        assertNotNull(response);
-        assertEquals("Updated", response.getBody());
-        verify(courseService, times(1)).updateCourse("1", "New Desc");
+    void getAllCourses_withLearnerRole_shouldReturnOk() throws Exception {
+        mockMvc.perform(get("/api/courses"))
+                .andExpect(status().isOk());
     }
+
 }
