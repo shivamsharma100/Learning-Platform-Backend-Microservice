@@ -96,13 +96,13 @@ class EnrollmentServiceTest {
                 .enrolledAt(OffsetDateTime.now())
                 .build();
 
-        when(enrollmentRepositories.findByCouseAndLearnerId(sampleCourse, "10")).thenReturn(enrollment);
+        when(enrollmentRepositories.findByCourseAndLearnerId(sampleCourse, 10)).thenReturn(enrollment);
 
         Enrollment result = enrollmentService.getEnrollmentById("1", "10");
 
         assertNotNull(result);
         assertEquals(10, result.getLearnerId());
-        verify(enrollmentRepositories, times(1)).findByCouseAndLearnerId(sampleCourse, "10");
+        verify(enrollmentRepositories, times(1)).findByCourseAndLearnerId(sampleCourse, 10);
     }
 
     @Test
@@ -113,6 +113,6 @@ class EnrollmentServiceTest {
                 () -> enrollmentService.getEnrollmentById("99", "10"));
 
         assertTrue(exception.getMessage().contains("Invalid course id provided 99"));
-        verify(enrollmentRepositories, never()).findByCouseAndLearnerId(any(), anyString());
+        verify(enrollmentRepositories, never()).findByCourseAndLearnerId(any(), any());
     }
 }

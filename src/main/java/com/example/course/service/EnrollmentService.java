@@ -39,6 +39,6 @@ public class EnrollmentService {
             throw new ResourceNotFoundException("Invalid course id provided "+ courseId);
         });
 
-        return enrollmentRepositories.findByCouseAndLearnerId(course, learnerId);
+        return enrollmentRepositories.findByCourseAndLearnerId(course, Integer.parseInt(learnerId));
     }
 }
