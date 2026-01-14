@@ -3,6 +3,7 @@ package com.example.course.service;
 import com.example.course.entities.Course;
 import com.example.course.entities.Enrollment;
 import com.example.course.enums.StatusEnum;
+import com.example.course.exception.EnrollmentNotAllowed;
 import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
 import com.example.course.repositories.EnrollmentRepositories;
@@ -40,7 +41,7 @@ class EnrollmentServiceTest {
         sampleCourse = Course.builder()
                 .id(1)
                 .title("Test Course")
-                .status("AVAILABLE")
+                .status("ok")
                 .build();
     }
 
@@ -96,13 +97,27 @@ class EnrollmentServiceTest {
                 .enrolledAt(OffsetDateTime.now())
                 .build();
 
-        when(enrollmentRepositories.findByCouseAndLearnerId(sampleCourse, "10")).thenReturn(enrollment);
+        when(enrollmentRepositories.findByCourseAndLearnerId(sampleCourse, 10)).thenReturn(enrollment);
 
         Enrollment result = enrollmentService.getEnrollmentById("1", "10");
 
         assertNotNull(result);
         assertEquals(10, result.getLearnerId());
-        verify(enrollmentRepositories, times(1)).findByCouseAndLearnerId(sampleCourse, "10");
+        verify(enrollmentRepositories, times(1)).findByCourseAndLearnerId(sampleCourse, 10);
+    }
+
+    @Test
+    void enrollmentIn_InvalidCourse_shouldReturnException() {
+        Course course = new Course();
+        course.setId(1);
+        course.setStatus("Not_AVAILABLE");
+        when(courseRepository.findById(1)).thenReturn(Optional.of(course));
+
+        EnrollmentRequest enrollmentRequest = new EnrollmentRequest();
+
+        assertThrows(EnrollmentNotAllowed.class, () -> {
+            enrollmentService.addEnrollments("1", enrollmentRequest);
+        });
     }
 
     @Test
@@ -113,6 +128,6 @@ class EnrollmentServiceTest {
                 () -> enrollmentService.getEnrollmentById("99", "10"));
 
         assertTrue(exception.getMessage().contains("Invalid course id provided 99"));
-        verify(enrollmentRepositories, never()).findByCouseAndLearnerId(any(), anyString());
+        verify(enrollmentRepositories, never()).findByCourseAndLearnerId(any(), any());
     }
 }

@@ -5,6 +5,8 @@ import com.example.course.entities.Role;
 import com.example.course.repositories.RoleRepository;
 import com.example.course.repositories.UserRepository;
 import com.example.course.util.JwtUtil;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class Controller {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
@@ -42,7 +44,7 @@ public class Controller {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
 
         Set<Role> userRoles = request.getRoles().stream()
                 .map(role -> roleRepository.findByName(role.getName())
@@ -63,7 +65,9 @@ public class Controller {
 
     @Data
     static class AuthRequest {
+        @NotBlank(message = "username cannot be blank or null")
         private String username;
+        @NotBlank(message = "username cannot be blank or null")
         private String password;
     }
 
@@ -75,7 +79,9 @@ public class Controller {
 
     @Data
     static class RegisterRequest {
+        @NotBlank(message = "username cannot be blank or null")
         private String username;
+        @NotBlank(message = "username cannot be blank or null")
         private String password;
         private Set<Role> roles; // ADMIN, INSTRUCTOR, LEARNER
     }

@@ -1,5 +1,7 @@
 package com.example.course.exception;
 
+import org.postgresql.util.PSQLException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -77,6 +79,17 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleForbidden(AccessDeniedException ex) {
+        ApiError error = new ApiError(
+                HttpStatus.FORBIDDEN.value(),
+                "Access denied",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(IncorrectStatusForEnrollment.class)
     public ResponseEntity<ApiError> handleForbidden(IncorrectStatusForEnrollment ex) {
         ApiError error = new ApiError(
@@ -88,5 +101,58 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(EnrollmentNotAllowed.class)
+    public ResponseEntity<ApiError> handleForbidden(EnrollmentNotAllowed ex) {
+        ApiError error = new ApiError(
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "Service not available",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex) {
+
+        Throwable root = getRootCause(ex);
+
+        if (root instanceof PSQLException psqlEx &&
+                psqlEx.getMessage() != null &&
+                psqlEx.getMessage().contains("uk_enrollment_course_learner")) {
+
+            ApiError apiError = new ApiError(
+                    HttpStatus.CONFLICT.value(),
+                    HttpStatus.CONFLICT.getReasonPhrase(),
+                    "Learner is already enrolled in this course",
+                    LocalDateTime.now()
+            );
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(apiError);
+        }
+
+        // fallback for other integrity violations
+        ApiError apiError = new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Data integrity violation",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(apiError);
+    }
+
+    private Throwable getRootCause(Throwable ex) {
+        Throwable cause = ex;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
 
 }

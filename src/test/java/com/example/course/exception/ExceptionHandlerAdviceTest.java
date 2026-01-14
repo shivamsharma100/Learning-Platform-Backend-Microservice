@@ -119,4 +119,19 @@ public class ExceptionHandlerAdviceTest {
         assertTrue(response.getBody().message().contains("email: must be valid"));
     }
 
+    @Test
+    void handleIncorrectEnrollment_ShouldReturn503() {
+        EnrollmentNotAllowed ex =
+                new EnrollmentNotAllowed("Enrollment not allowed in this course");
+
+        ResponseEntity<ApiError> response =
+                advice.handleForbidden(ex);
+
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(503, response.getBody().status());
+        assertEquals("Service not available", response.getBody().error());
+        assertEquals("Enrollment not allowed in this course", response.getBody().message());
+    }
+
 }

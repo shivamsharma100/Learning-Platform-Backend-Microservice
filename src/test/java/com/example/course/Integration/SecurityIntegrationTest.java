@@ -91,7 +91,7 @@ class SecurityIntegrationTest {
                 .title("Test Course")
                 .level("BEGINNER")
                 .duration(8)
-                .status("available")
+                .status("ok")
                 .build();
 
         Course savedCourse = courseRepository.save(course);
