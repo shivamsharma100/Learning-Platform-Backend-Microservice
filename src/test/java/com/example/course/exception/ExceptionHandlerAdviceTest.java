@@ -3,6 +3,7 @@ package com.example.course.exception;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -132,6 +133,19 @@ public class ExceptionHandlerAdviceTest {
         assertEquals(503, response.getBody().status());
         assertEquals("Service not available", response.getBody().error());
         assertEquals("Enrollment not allowed in this course", response.getBody().message());
+    }
+
+    @Test
+    void handleDataIntegrityViolation() {
+        DataIntegrityViolationException ex =
+                new DataIntegrityViolationException("Enrollment not allowed in this course");
+
+        ResponseEntity<ApiError> response =
+                advice.handleDataIntegrityViolation(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(400, response.getBody().status());
     }
 
 }

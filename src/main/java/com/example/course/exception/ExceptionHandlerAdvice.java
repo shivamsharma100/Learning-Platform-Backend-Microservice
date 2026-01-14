@@ -79,17 +79,6 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleForbidden(AccessDeniedException ex) {
-        ApiError error = new ApiError(
-                HttpStatus.FORBIDDEN.value(),
-                "Access denied",
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler(IncorrectStatusForEnrollment.class)
     public ResponseEntity<ApiError> handleForbidden(IncorrectStatusForEnrollment ex) {
         ApiError error = new ApiError(
