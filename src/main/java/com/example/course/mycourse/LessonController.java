@@ -1,6 +1,5 @@
 package com.example.course.mycourse;
 
-import com.example.course.entities.Course;
 import com.example.course.entities.Lesson;
 import com.example.course.request.LessonRequest;
 import com.example.course.service.LessonService;
