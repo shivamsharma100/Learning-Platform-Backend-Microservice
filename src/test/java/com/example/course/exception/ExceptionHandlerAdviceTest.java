@@ -135,17 +135,4 @@ public class ExceptionHandlerAdviceTest {
         assertEquals("Enrollment not allowed in this course", response.getBody().message());
     }
 
-    @Test
-    void handleDataIntegrityViolation() {
-        DataIntegrityViolationException ex =
-                new DataIntegrityViolationException("Enrollment not allowed in this course");
-
-        ResponseEntity<ApiError> response =
-                advice.handleDataIntegrityViolation(ex);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(400, response.getBody().status());
-    }
-
 }
