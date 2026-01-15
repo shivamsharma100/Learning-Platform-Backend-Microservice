@@ -60,7 +60,7 @@ class EnrollmentServiceTest {
         request.setEnrollments(List.of(info));
 
         when(enrollmentRepositories.saveAll(anyList())).thenAnswer(invocation -> invocation.getArgument(0));
-
+        when(enrollmentRepositories.getByCourseId(sampleCourse)).thenReturn(0);
         // Act
         List<Enrollment> result = enrollmentService.addEnrollments("1", request);
 
