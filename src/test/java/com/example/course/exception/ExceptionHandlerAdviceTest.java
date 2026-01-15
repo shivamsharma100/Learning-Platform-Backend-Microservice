@@ -3,6 +3,7 @@ package com.example.course.exception;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Test;
+import org.postgresql.util.PSQLException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class ExceptionHandlerAdviceTest {
+
+    private final ExceptionHandlerAdvice handler =
+            new ExceptionHandlerAdvice();
 
     private final ExceptionHandlerAdvice advice = new ExceptionHandlerAdvice();
 
@@ -146,6 +151,87 @@ public class ExceptionHandlerAdviceTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(400, response.getBody().status());
+    }
+
+    @Test
+    void shouldReturnConflict_whenUniqueConstraintViolated() {
+        // given
+        PSQLException psqlException = new PSQLException(
+                "ERROR: duplicate key value violates unique constraint \"uk_enrollment_course_learner\"",
+                null
+        );
+
+        DataIntegrityViolationException ex =
+                new DataIntegrityViolationException("Integrity violation", psqlException);
+
+        // when
+        ResponseEntity<ApiError> response =
+                handler.handleDataIntegrityViolation(ex);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+        ApiError body = response.getBody();
+        assertThat(body).isNotNull();
+    }
+
+    @Test
+    void shouldReturnBadRequest_forOtherIntegrityViolations() {
+        // given
+        RuntimeException rootCause = new RuntimeException("Some other constraint");
+        DataIntegrityViolationException ex =
+                new DataIntegrityViolationException("Integrity violation", rootCause);
+
+        // when
+        ResponseEntity<ApiError> response =
+                handler.handleDataIntegrityViolation(ex);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        ApiError body = response.getBody();
+        assertThat(body).isNotNull();
+    }
+
+    @Test
+    void shouldTraverseToDeepestRootCause() {
+        // given
+        Throwable deepestCause =
+                new PSQLException(
+                        "uk_enrollment_course_learner",
+                        null
+                );
+
+        RuntimeException level2 =
+                new RuntimeException("level2", deepestCause);
+        RuntimeException level1 =
+                new RuntimeException("level1", level2);
+
+        DataIntegrityViolationException ex =
+                new DataIntegrityViolationException("Integrity violation", level1);
+
+        // when
+        ResponseEntity<ApiError> response =
+                handler.handleDataIntegrityViolation(ex);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void shouldReturnBadRequest_whenRootCauseMessageIsNull() {
+        // given
+        PSQLException psqlException = new PSQLException(null, null);
+
+        DataIntegrityViolationException ex =
+                new DataIntegrityViolationException("Integrity violation", psqlException);
+
+        // when
+        ResponseEntity<ApiError> response =
+                handler.handleDataIntegrityViolation(ex);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
 }
