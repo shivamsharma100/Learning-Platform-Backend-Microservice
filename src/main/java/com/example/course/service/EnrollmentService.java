@@ -15,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.course.AppConstants.MAX_ENROLLMENTS;
 import static com.example.course.util.CourseUtil.checkIfCourseIsAvailable;
 
 @Slf4j
@@ -40,6 +41,13 @@ public class EnrollmentService {
                 .build()
 
         ).collect(Collectors.toList());
+        Integer countOfEnrollments = countEnrollments(course);
+        if(countOfEnrollments+1==MAX_ENROLLMENTS){
+            throw new EnrollmentNotAllowed("Enrollments size is greater than maximum limit allowed");
+        }
+        else if(countOfEnrollments>=2){
+            throw new EnrollmentNotAllowed("Maximum limit of enrollment reached, please wait for new batch");
+        }
         return enrollmentRepositories.saveAll(enrollments);
     }
 
@@ -49,5 +57,9 @@ public class EnrollmentService {
         });
 
         return enrollmentRepositories.findByCourseAndLearnerId(course, Integer.parseInt(learnerId));
+    }
+
+    private Integer countEnrollments(Course courseId){
+        return enrollmentRepositories.getByCourseId(courseId);
     }
 }
