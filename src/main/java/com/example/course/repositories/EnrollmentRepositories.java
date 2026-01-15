@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EnrollmentRepositories extends JpaRepository<Enrollment, Integer> {
     Enrollment findByCourseAndLearnerId(Course course, Integer learnerId);
+
+    @Query("Select count(e) from Enrollment e where e.course =:course")
+    Integer getByCourseId(Course course);
 }
