@@ -5,6 +5,7 @@ import com.example.course.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +39,10 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('LEARNER','INSTRUCTOR', 'ADMIN')")
     @Operation(summary = "Get all courses")
     @GetMapping()
-    public ResponseEntity<List<Course>> getCourses() {
-        List<Course> course = courseService.getCourses();
-        return ResponseEntity.ok(course);
+    public ResponseEntity<Page<Course>> getCourses(@RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        Page<Course> courses = courseService.getCourses(page, size);
+        return ResponseEntity.ok(courses);
     }
 
     @PreAuthorize("hasAnyRole('INSTRUCTOR', 'ADMIN')")
