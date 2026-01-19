@@ -3,6 +3,7 @@ package com.example.course.service;
 import com.example.course.entities.Course;
 import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
+import com.example.course.util.CoursePdfGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +52,15 @@ public class CourseService {
 
         );
         return "course has been updated successfully";
+    }
+
+    public byte[] generateCoursesPdf() {
+        List<Course> courses = courseRepository.findAll();
+
+        if (courses.isEmpty()) {
+            throw new ResourceNotFoundException("No courses available");
+        }
+
+        return CoursePdfGenerator.generateCoursePdf(courses);
     }
 }

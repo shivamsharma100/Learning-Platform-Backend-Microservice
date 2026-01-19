@@ -52,5 +52,18 @@ public class CourseController {
         return ResponseEntity.ok(courseService.updateCourse(courseId, description));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','INSTRUCTOR')")
+    @Operation(summary = "Download all courses as PDF")
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> downloadCoursesPdf() {
+
+        byte[] pdfBytes = courseService.generateCoursesPdf();
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=courses.pdf")
+                .header("Content-Type", "application/pdf")
+                .body(pdfBytes);
+    }
+
 
 }

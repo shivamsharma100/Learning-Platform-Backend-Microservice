@@ -128,4 +128,18 @@ class CourseServiceTest {
         assertTrue(exception.getMessage().contains("Course not found for courseId99"));
         verify(courseRepository, never()).save(any());
     }
+
+    @Test
+    void generateCoursesPdf_success() {
+        List<Course> courses = List.of(
+                Course.builder().id(1).title("Java").description("desc").level("Beginner").duration(10).build()
+        );
+
+        when(courseRepository.findAll()).thenReturn(courses);
+
+        byte[] pdf = courseService.generateCoursesPdf();
+
+        assertNotNull(pdf);
+        assertTrue(pdf.length > 0);
+    }
 }
