@@ -1,6 +1,5 @@
 package com.example.course.repositories;
 
-import com.example.course.entities.Role;
 import com.example.course.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

@@ -6,6 +6,10 @@ import static com.example.course.AppConstants.COURSE_AVAILABILITY;
 
 public class CourseUtil {
 
+    private CourseUtil(){
+
+    }
+
     public static boolean checkIfCourseIsAvailable(Course course){
         return !course.getStatus().equalsIgnoreCase(COURSE_AVAILABILITY);
     }
