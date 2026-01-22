@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class ExceptionHandlerAdviceTest {
+class ExceptionHandlerAdviceTest {
 
     private final ExceptionHandlerAdvice handler =
             new ExceptionHandlerAdvice();
