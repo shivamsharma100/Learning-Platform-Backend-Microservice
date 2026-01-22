@@ -72,4 +72,14 @@ class CourseControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void downloadCoursesPdf_success() throws Exception {
+
+        byte[] pdfBytes = "dummy-pdf".getBytes();
+        when(courseService.generateCoursesPdf()).thenReturn(pdfBytes);
+
+        mockMvc.perform(get("/api/courses/pdf"))
+                .andExpect(status().isOk());
+                }
+
 }

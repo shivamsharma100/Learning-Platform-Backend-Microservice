@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class SecurityConfigUnitTest {
+class SecurityConfigTest {
 
     @Mock
     private JwtAuthenticationFilter jwtAuthenticationFilter;

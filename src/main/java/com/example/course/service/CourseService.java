@@ -3,11 +3,16 @@ package com.example.course.service;
 import com.example.course.entities.Course;
 import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
+import com.example.course.util.CoursePdfGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -24,13 +29,17 @@ public class CourseService {
         return course.orElse(null);
     }
 
-    public List<Course> getCourses() {
-        Optional<List<Course>> courses = Optional.of(courseRepository.findAll());
-        if (courses.get().isEmpty()) {
+    public Page<Course> getCourses(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size); // page starts from 0
+        Page<Course> coursesPage = courseRepository.findAll(pageable);
+
+        if (coursesPage.isEmpty()) {
             throw new ResourceNotFoundException("No courses available at this time");
         }
-        return courses.get();
+
+        return coursesPage;
     }
+
 
     public String updateCourse(String courseId, String description) {
         courseRepository.findById(Integer.parseInt(courseId)).ifPresentOrElse(
@@ -43,5 +52,15 @@ public class CourseService {
 
         );
         return "course has been updated successfully";
+    }
+
+    public byte[] generateCoursesPdf() {
+        List<Course> courses = courseRepository.findAll();
+
+        if (courses.isEmpty()) {
+            throw new ResourceNotFoundException("No courses available");
+        }
+
+        return CoursePdfGenerator.generateCoursePdf(courses);
     }
 }

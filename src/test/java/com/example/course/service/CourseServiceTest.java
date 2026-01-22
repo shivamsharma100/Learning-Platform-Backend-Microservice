@@ -9,6 +9,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -73,24 +79,30 @@ class CourseServiceTest {
     /* ==================== getCourses ==================== */
 
     @Test
-    void getCourses_whenCoursesExist_shouldReturnList() {
-        when(courseRepository.findAll()).thenReturn(List.of(sampleCourse));
+    void getCourses_whenCoursesExist_shouldReturnPage() {
+        // Create a Page with 1 sample course
+        Page<Course> page = new PageImpl<>(List.of(sampleCourse));
+        when(courseRepository.findAll(any(Pageable.class))).thenReturn(page);
 
-        List<Course> result = courseService.getCourses();
+        Page<Course> result = courseService.getCourses(0, 10); // page=0, size=10
 
-        assertEquals(1, result.size());
-        verify(courseRepository, times(1)).findAll();
+        assertEquals(1, result.getContent().size());
+        assertEquals(sampleCourse, result.getContent().get(0));
+        verify(courseRepository, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
     void getCourses_whenNoCourses_shouldThrowException() {
-        when(courseRepository.findAll()).thenReturn(Collections.emptyList());
+        // Empty page
+        Page<Course> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(courseRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
 
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
-                () -> courseService.getCourses());
+                () -> courseService.getCourses(0, 10));
 
         assertTrue(exception.getMessage().contains("No courses available"));
     }
+
 
     /* ==================== updateCourse ==================== */
 
@@ -115,5 +127,19 @@ class CourseServiceTest {
 
         assertTrue(exception.getMessage().contains("Course not found for courseId99"));
         verify(courseRepository, never()).save(any());
+    }
+
+    @Test
+    void generateCoursesPdf_success() {
+        List<Course> courses = List.of(
+                Course.builder().id(1).title("Java").description("desc").level("Beginner").duration(10).build()
+        );
+
+        when(courseRepository.findAll()).thenReturn(courses);
+
+        byte[] pdf = courseService.generateCoursesPdf();
+
+        assertNotNull(pdf);
+        assertTrue(pdf.length > 0);
     }
 }

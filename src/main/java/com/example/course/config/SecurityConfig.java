@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/courses").hasAnyRole(ADMIN, INSTRUCTOR)
                         .requestMatchers(HttpMethod.GET, "/api/courses/course/*").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/courses/pdf").hasAnyRole(INSTRUCTOR, ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/courses").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/courses/*").hasAnyRole(ADMIN, INSTRUCTOR)
                         .requestMatchers(HttpMethod.GET, "/api/enrollment/courses/*/enrollments").hasAnyRole(LEARNER, ADMIN)
