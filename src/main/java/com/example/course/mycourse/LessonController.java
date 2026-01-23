@@ -5,6 +5,7 @@ import com.example.course.request.LessonRequest;
 import com.example.course.service.LessonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     @Operation(summary = "Add new Lessons for a course")
     @PostMapping("/courses/{courseId}/lessons")
-    public ResponseEntity<Boolean> addCourse(@RequestBody LessonRequest lessonRequests,
+    public ResponseEntity<Boolean> addCourse(@Valid @RequestBody LessonRequest lessonRequests,
                                              @PathVariable String courseId) {
         Boolean response = lessonService.addLessons(lessonRequests, courseId);
         return ResponseEntity.ok(response);

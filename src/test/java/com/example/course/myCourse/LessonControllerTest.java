@@ -5,6 +5,7 @@ import com.example.course.mycourse.LessonController;
 import com.example.course.request.LessonRequest;
 import com.example.course.service.LessonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,8 +41,14 @@ class LessonControllerTest {
     @Test
     void testAddLessons_success() throws Exception {
         LessonRequest lessonRequest = new LessonRequest();
+        LessonRequest.Lesson lesson = new LessonRequest.Lesson();
+        lesson.setContentUrl("abc");
+        lesson.setTitle("abc");
+        lesson.setOrderNo("o1");
+        List<LessonRequest.Lesson> list = new ArrayList<>();
+        list.add(lesson);
+        lessonRequest.setLessons(list);
         ObjectMapper objectMapper = new ObjectMapper();
-
         mockMvc.perform(post("/api/lesson/courses/" + 1 + "/lessons")
                         .header("Authorization", "Bearer admin-token")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,8 +1,10 @@
 package com.example.course.request;
 
 import com.example.course.enums.StatusEnum;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.OffsetDateTime;
 
@@ -11,16 +13,18 @@ import java.util.List;
 @Data
 public class EnrollmentRequest {
 
-    @Size(max = 2, message = "You can submit at most 2 enrollments")
+    @NotEmpty(message = "Lessons list cannot be empty")
+    @jakarta.validation.Valid
     List<Enrollment> enrollments;
 
     @Data
     public static class Enrollment {
-        @NotEmpty(message = "learner ID cannot be empty or blank")
+        @NotBlank(message = "learner ID cannot be empty or blank")
         String learnerId;
-        @NotEmpty(message = "status cannot be empty or blank")
+
         StatusEnum status;
-        @NotEmpty(message = "enrolledAt time cannot be empty or blank")
+        @NotNull
+        @FutureOrPresent(message = "Enrollment date must be today or future")
         OffsetDateTime enrolledAt;
     }
 }
