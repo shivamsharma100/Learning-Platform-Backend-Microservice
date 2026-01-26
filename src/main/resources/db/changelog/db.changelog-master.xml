@@ -12,5 +12,7 @@
     <include file="db/changelog/db.changelog-create-lesson-table.xml"/>
     <include file="db/changelog/db.changelog-create-enrollment-table.xml"/>
     <include file="db/changelog/db.changelog-unique-constraint.xml"/>
+    <include file="db/changelog/db.changelog-roles-table.xml"/>
+    <include file="db/changelog/db.changelog-user-table.xml"/>
 
 </databaseChangeLog>
