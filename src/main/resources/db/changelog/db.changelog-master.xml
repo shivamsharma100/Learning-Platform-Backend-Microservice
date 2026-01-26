@@ -13,6 +13,6 @@
     <include file="db/changelog/db.changelog-unique-constraint.xml"/>
     <include file="db/changelog/db.changelog-roles-table.xml"/>
     <include file="db/changelog/db.changelog-user-table.xml"/>
-    <include file="db/changelog/db.changelog-roles.xml"/>
+<!--    <include file="db/changelog/db.changelog-roles.xml"/>-->
 
 </databaseChangeLog>
