@@ -9,7 +9,7 @@
     <changeSet id="001-create-enrollment-table" author="shivam">
 
         <!-- Create Enrollment Table -->
-        <createTable tableName="enrollments">
+        <createTable tableName="enrollment">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
