@@ -154,6 +154,17 @@ class ExceptionHandlerAdviceTest {
     }
 
     @Test
+    void handleJsonProcessingException() {
+        JsonSchemaValidationException ex =
+                new JsonSchemaValidationException("Invalid JSon", null);
+
+        ResponseEntity<ApiError> response =
+                advice.handleJsonProcessing(ex);
+
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
+    }
+
+    @Test
     void shouldReturnConflict_whenUniqueConstraintViolated() {
         // given
         PSQLException psqlException = new PSQLException(

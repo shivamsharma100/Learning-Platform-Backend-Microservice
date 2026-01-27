@@ -1,12 +1,15 @@
 package com.example.course.myCourse;
 
 import com.example.course.enums.StatusEnum;
+import com.example.course.exception.JsonSchemaValidationException;
 import com.example.course.mycourse.EnrollmentController;
 import com.example.course.request.EnrollmentRequest;
+import com.example.course.schemaValidator.JsonSchemaValidator;
 import com.example.course.service.EnrollmentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +24,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +39,12 @@ class EnrollmentControllerTest {
     @Mock
     private EnrollmentService enrollmentService;
 
+    @Mock
+    private ObjectMapper objectMapper;
+
+    @Mock
+    private JsonSchemaValidator jsonSchemaValidator;
+
     @InjectMocks
     private EnrollmentController enrollmentController;
 
@@ -44,6 +56,7 @@ class EnrollmentControllerTest {
 
     @Test
     void addEnrollments_withAdminRole_shouldReturnOk() throws Exception {
+        when(jsonSchemaValidator.validate(anyString())).thenReturn(Boolean.TRUE);
         EnrollmentRequest request = new EnrollmentRequest();
         EnrollmentRequest.Enrollment enrollment = new EnrollmentRequest.Enrollment();
         enrollment.setEnrolledAt(OffsetDateTime.now().plusMinutes(20));
@@ -74,5 +87,4 @@ class EnrollmentControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
-
 }
