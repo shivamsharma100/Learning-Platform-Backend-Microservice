@@ -1,0 +1,76 @@
+{
+	"id": "153fa278-06e9-439f-86b2-7c1abf9f13db",
+	"name": "Local",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8085",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "username",
+			"value": "testuser",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "test123",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "invalidToken",
+			"value": "invalid.token.value",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "courseId",
+			"value": "1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "learnerId",
+			"value": "10",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "invalidUserName",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "invalidCourseId",
+			"value": "91",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "status",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "instructor",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"color": null,
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-01-26T14:20:35.017Z",
+	"_postman_exported_using": "Postman/11.81.0"
+}

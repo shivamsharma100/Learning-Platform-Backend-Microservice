@@ -1,4 +1,4 @@
-name: CI Build with SonarCloud
+name: CI Build with Newman and PostgreSQL
 
 on:
   push:
@@ -6,10 +6,23 @@ on:
       - '**'
   pull_request:
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout code
@@ -22,18 +35,28 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Build, Test & SonarCloud Analysis
+      - name: Build & Test with Maven
+        run: mvn clean verify
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Start Spring Boot service on port 8085
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+          SPRING_DATASOURCE_USERNAME: testuser
+          SPRING_DATASOURCE_PASSWORD: testpass
         run: |
-          mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.projectName="Learning-Platform-Backend-Microservice" \
-            -Dsonar.projectVersion=1.0 \
-            -Dsonar.sources=src/main/java \
-            -Dsonar.tests=src/test/java \
-            -Dsonar.java.binaries=target/classes \
-            -Dsonar.junit.reportPaths=target/surefire-reports \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report/jacoco.xml 
+          echo "Starting Spring Boot..."
+          mvn spring-boot:run -Dserver.port=8085 &
+          echo "Waiting for Spring Boot to be ready..."
+          n=0
+          until curl -s http://localhost:8085/actuator/health | grep UP || [ $n -eq 30 ]; do
+            n=$((n+1))
+            sleep 2
+          done
+          echo "Spring Boot is up!"
+
+      - name: Run Newman API tests
+        run: |
+          newman run postman/collection.json --env-var "baseUrl=http://localhost:8085"

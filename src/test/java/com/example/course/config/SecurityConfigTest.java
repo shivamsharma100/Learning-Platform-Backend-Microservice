@@ -1,5 +1,6 @@
 package com.example.course.config;
 
+import com.example.course.auth.CustomAccessDeniedHandler;
 import com.example.course.filter.JwtAuthenticationFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,15 @@ class SecurityConfigTest {
     @Mock
     private org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
 
+    @Mock
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
     private SecurityConfig securityConfig;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        securityConfig = new SecurityConfig(jwtAuthenticationFilter, userDetailsService);
+        securityConfig = new SecurityConfig(jwtAuthenticationFilter, userDetailsService,accessDeniedHandler);
     }
 
     @Test

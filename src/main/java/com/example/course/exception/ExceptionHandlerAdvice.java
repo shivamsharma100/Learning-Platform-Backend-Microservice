@@ -101,6 +101,18 @@ public class ExceptionHandlerAdvice {
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
+    @ExceptionHandler(JsonSchemaValidationException.class)
+    public ResponseEntity<ApiError> handleJsonProcessing(JsonSchemaValidationException ex) {
+        ApiError error = new ApiError(
+                HttpStatus.NOT_ACCEPTABLE.value(),
+                "Invalid Json",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrityViolation(
             DataIntegrityViolationException ex) {
