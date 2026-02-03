@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class ExceptionHandlerAdviceTest {
+class ExceptionHandlerAdviceTest {
 
     private final ExceptionHandlerAdvice handler =
             new ExceptionHandlerAdvice();
@@ -151,6 +151,17 @@ public class ExceptionHandlerAdviceTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(400, response.getBody().status());
+    }
+
+    @Test
+    void handleJsonProcessingException() {
+        JsonSchemaValidationException ex =
+                new JsonSchemaValidationException("Invalid JSon", null);
+
+        ResponseEntity<ApiError> response =
+                advice.handleJsonProcessing(ex);
+
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
     }
 
     @Test

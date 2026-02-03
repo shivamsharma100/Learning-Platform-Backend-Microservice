@@ -9,7 +9,7 @@
     <changeSet id="001-create-enrollment-table" author="shivam">
 
         <!-- Create Enrollment Table -->
-        <createTable tableName="enrollments">
+        <createTable tableName="enrollment">
             <column name="id" type="INT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -34,7 +34,7 @@
         <!-- Foreign Key to Course -->
         <addForeignKeyConstraint
                 constraintName="fk_enrollment_course"
-                baseTableName="enrollments"
+                baseTableName="enrollment"
                 baseColumnNames="course_id"
                 referencedTableName="courses"
                 referencedColumnNames="id"
@@ -42,16 +42,16 @@
 
         <!-- Prevent duplicate enrollment -->
         <addUniqueConstraint
-                tableName="enrollments"
+                tableName="enrollment"
                 columnNames="course_id, learner_id"
                 constraintName="uk_course_learner"/>
 
         <!-- Indexes -->
-        <createIndex tableName="enrollments" indexName="idx_enrollment_course">
+        <createIndex tableName="enrollment" indexName="idx_enrollment_course">
             <column name="course_id"/>
         </createIndex>
 
-        <createIndex tableName="enrollments" indexName="idx_enrollment_learner">
+        <createIndex tableName="enrollment" indexName="idx_enrollment_learner">
             <column name="learner_id"/>
         </createIndex>
 

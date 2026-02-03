@@ -13,6 +13,10 @@ import java.util.List;
 
 public class CoursePdfGenerator {
 
+    private CoursePdfGenerator(){
+
+    }
+
     public static byte[] generateCoursePdf(List<Course> courses) {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

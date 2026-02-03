@@ -106,7 +106,7 @@ class SecurityIntegrationTest {
                         {
                           "learnerId": "1",
                           "status": "available",
-                          "enrolledAt": "2026-01-08T10:15:30Z"
+                          "enrolledAt": "2026-12-12T10:15:30Z"
                         }
                       ]
                     }
@@ -116,10 +116,21 @@ class SecurityIntegrationTest {
 
     @Test
     void postEnrollments_withLearnerRole_shouldReturnForbidden() throws Exception {
+        String sample = """
+                    {
+                      "enrollments": [
+                        {
+                          "learnerId": "1",
+                          "status": "available",
+                          "enrolledAt": "2026-12-12T10:15:30Z"
+                        }
+                      ]
+                    }
+                """;
         mockMvc.perform(post("/api/enrollment/courses/1/enrollments")
                         .header("Authorization", "Bearer learner-token")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                        .content(sample))
                 .andExpect(status().isForbidden());
     }
 

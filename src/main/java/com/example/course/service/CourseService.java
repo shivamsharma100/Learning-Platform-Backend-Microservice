@@ -5,6 +5,7 @@ import com.example.course.exception.ResourceNotFoundException;
 import com.example.course.repositories.CourseRepository;
 import com.example.course.util.CoursePdfGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CourseService {
@@ -34,6 +36,7 @@ public class CourseService {
         Page<Course> coursesPage = courseRepository.findAll(pageable);
 
         if (coursesPage.isEmpty()) {
+            log.warn("No courses available at this time");
             throw new ResourceNotFoundException("No courses available at this time");
         }
 
@@ -47,6 +50,7 @@ public class CourseService {
                     course.setDescription(description);
                     courseRepository.save(course);
                 }, () -> {
+                    log.warn("Course not found for courseId {}", courseId);
                     throw new ResourceNotFoundException("Course not found for courseId" + courseId);
                 }
 
@@ -58,6 +62,7 @@ public class CourseService {
         List<Course> courses = courseRepository.findAll();
 
         if (courses.isEmpty()) {
+            log.warn("No courses available");
             throw new ResourceNotFoundException("No courses available");
         }
 

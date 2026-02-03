@@ -1,5 +1,6 @@
 package com.example.course.config;
 
+import com.example.course.auth.CustomAccessDeniedHandler;
 import com.example.course.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,7 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/lesson/courses/*/lessons").hasAnyRole(INSTRUCTOR, LEARNER, ADMIN)
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(ex -> ex
+                .accessDeniedHandler(accessDeniedHandler));
 
         return http.build();
     }
