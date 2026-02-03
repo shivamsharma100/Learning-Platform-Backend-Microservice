@@ -1,4 +1,4 @@
----
+
 
 ````md
 # API Contract – Course Management System
@@ -272,4 +272,5 @@ GET /api/lesson/courses/{courseId}/lessons
 * Required fields must not be null or empty
 * Maximum 2 enrollments per request
 * JWT token is required for all APIs
+
 
